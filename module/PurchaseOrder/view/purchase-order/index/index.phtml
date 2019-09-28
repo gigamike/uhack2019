@@ -1,0 +1,183 @@
+
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Purchase Orders</h1>
+      <?php if ($user = $this->identity()): ?>
+        <?php if ($user->role == 'engineer'): ?>
+      <a href="<?php echo $this->url('purchase-order', ['action' => 'add']); ?>" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add New P.O.</a>
+    <?php endif; ?>
+  <?php endif; ?>
+    </div>
+
+
+    <!-- Content Row -->
+    <div class="row">
+      <div class="col-lg-12 mb-12">
+        <!-- Approach -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Overview</h6>
+          </div>
+          <div class="card-body">
+            <?php
+    $flash = $this->flashMessenger();
+    $flash->setMessageOpenFormat('<div%s role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        ')
+        ->setMessageSeparatorString('')
+        ->setMessageCloseString('</div>');
+
+    echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+    echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+    echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+    echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+     ?>
+     <?php
+     echo $this->paginationControl(
+     $this->paginator,
+     'sliding',
+     "partial/purchase-order/paginator.phtml",
+     array(
+         'route' => 'purchase-order',
+     'search_by' => $this->search_by,
+     )
+     );
+     ?>
+            <table class="table table-striped table-bordered table-hover table-sm">
+              <thead>
+                <tr>
+                  <th scope="col">P.O. #</th>
+                  <th scope="col">Requested By</th>
+                  <th scope="col">Created Datetime</th>
+                  <th scope="col">Standard Rate (Total Amount)</th>
+
+                  <?php if ($user = $this->identity()): ?>
+                    <?php if ($user->role == 'engineer'): ?>
+                      <th scope="col">No. of Suppliers/Vendors Bid</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">View</th>
+                  <th scope="col">Edit</th>
+                  <th scope="col">Delete</th>
+                <?php endif; ?>
+              <?php endif; ?>
+
+                  <?php if ($user = $this->identity()): ?>
+                    <?php if ($user->role == 'supplier'): ?>
+                      <th scope="col">Status</th>
+                      <th scope="col">Bid/Quotation</th>
+                      <th scope="col">View</th>
+                  <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($user = $this->identity()): ?>
+                  <?php if ($user->role == 'manager-finance'): ?>
+                    <th scope="col">No. of Suppliers/Vendors Bid</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">View</th>
+                  <?php endif; ?>
+                <?php endif; ?>
+
+                </tr>
+              </thead>
+              <tbody>
+                <?php if(count($this->paginator) >0): ?>
+                    <?php foreach ($this->paginator as $row): ?>
+                <tr>
+                  <td><?php echo $this->escapehtml($row->id); ?></td>
+                  <td><?php echo $this->escapehtml($row->first_name); ?> <?php echo $this->escapehtml($row->last_name); ?></td>
+                  <td><?php echo date('M d, Y H:i:s', strtotime($row->created_datetime)); ?></td>
+                  <td>PHP <?php echo number_format($row->amount, 2, '.', ''); ?></td>
+
+                  <?php if ($user = $this->identity()): ?>
+                    <?php if ($user->role == 'engineer'): ?>
+                      <td><?php
+                        $filter = array(
+                          'purchase_order_id' => $row->id,
+                        );
+                        $countBid = $this->getCountBid($filter);
+                      ?>
+                      <?php if ($countBid > 0): ?>
+                        <a href="<?php echo $this->url('purchase-order', ['action' => 'bid', 'id' => $row->id]); ?>"><?php echo $countBid>1 ? $countBid . " Suppliers/Vendors" : $countBid . " Supplier/Vendor" ; ?></a>
+                      <?php else: ?>
+                        None
+                      <?php endif; ?>
+                      </td>
+                      <td><?php echo $this->escapehtml($row->status); ?></td>
+                      <td><a href="<?php echo $this->url('purchase-order', ['action' => 'view', 'id' => $row->id]); ?>">View</a></td>
+                  <td><a href="<?php echo $this->url('purchase-order', ['action' => 'edit', 'id' => $row->id]); ?>">Edit</a></td>
+                  <td><a href="<?php echo $this->url('purchase-order', ['action' => 'delete', 'id' => $row->id]); ?>">Delete</a></td>
+                  <?php endif; ?>
+                  <?php endif; ?>
+
+
+                  <?php if ($user = $this->identity()): ?>
+                    <?php if ($user->role == 'supplier'): ?>
+                        <td><?php echo $this->escapehtml($row->status); ?></td>
+                        <td>
+                          <?php
+                            $filter = array(
+                              'purchase_order_id' => $row->id,
+                              'supplier_id' => $user->id,
+                            );
+                            if(count($this->getBid($filter)) <= 0):
+                          ?>
+                          <a href="<?php echo $this->url('purchase-order', ['action' => 'quotation', 'id' => $row->id]); ?>">Bid/Quotation</a>
+                          <?php else: ?>
+                          <a href="#" style="color:red">Cancel Bid/Quotation</a>
+                          <?php endif; ?>
+                        </td>
+                        <td><a href="<?php echo $this->url('purchase-order', ['action' => 'view', 'id' => $row->id]); ?>">View</a></td>
+                  <?php endif; ?>
+                <?php endif; ?>
+
+                <?php if ($user = $this->identity()): ?>
+                  <?php if ($user->role == 'manager-finance'): ?>
+                    <td><?php
+                      $filter = array(
+                        'purchase_order_id' => $row->id,
+                      );
+                      $countBid = $this->getCountBid($filter);
+                    ?>
+                    <?php if ($countBid > 0): ?>
+                      <a href="<?php echo $this->url('purchase-order', ['action' => 'bid', 'id' => $row->id]); ?>"><?php echo $countBid>1 ? $countBid . " Suppliers/Vendors" : $countBid . " Supplier/Vendor" ; ?></a>
+                    <?php else: ?>
+                      None
+                    <?php endif; ?>
+                    </td>
+                    <td><?php echo $this->escapehtml($row->status); ?></td>
+                    <td><a href="<?php echo $this->url('purchase-order', ['action' => 'view', 'id' => $row->id]); ?>">View</a></td>
+                  <?php endif; ?>
+                <?php endif; ?>
+
+
+
+                </tr>
+                  <?php endforeach; ?>
+                  <?php endif; ?>
+              </tbody>
+            </table>
+
+            <?php
+        echo $this->paginationControl(
+            $this->paginator,
+            'sliding',
+            "partial/purchase-order/paginator.phtml",
+            array(
+                'route' => 'purchase-order',
+            'search_by' => $this->search_by,
+            )
+        );
+      ?>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container-fluid -->

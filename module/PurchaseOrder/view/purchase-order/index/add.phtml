@@ -1,0 +1,128 @@
+
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Purchase Orders</h1>
+    </div>
+
+
+    <!-- Content Row -->
+    <div class="row">
+      <div class="col-lg-12 mb-12">
+        <!-- Approach -->
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">New</h6>
+          </div>
+          <div class="card-body">
+            <?php
+    $flash = $this->flashMessenger();
+    $flash->setMessageOpenFormat('<div%s role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        ')
+        ->setMessageSeparatorString('')
+        ->setMessageCloseString('</div>');
+
+    echo $flash->render('error',   array('alert', 'alert-dismissible', 'alert-danger'));
+    echo $flash->render('info',    array('alert', 'alert-dismissible', 'alert-info'));
+    echo $flash->render('default', array('alert', 'alert-dismissible', 'alert-warning'));
+    echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-success'));
+     ?>
+
+            <form method="post">
+              <div class="form-group">
+                <?php for($ctr=1; $ctr<=5; $ctr++): ?>
+                <div class="form-row">
+                  <div class="form-group col-md-3">
+                    <label for="inputEmail4">Item Name</label>
+                    <input type="text" class="form-control item" placeholder="Item <?php echo $ctr; ?>" name="items[]">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="inputEmail4">Quantity</label>
+                    <input type="text" class="form-control quantity" placeholder="Quantity" name="quanitities[]" value="0">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="inputEmail4">Standard Rate (PHP)</label>
+                    <input type="text" class="form-control price" placeholder="Unit Price" name="prices[]" value="0.00">
+                  </div>
+                  <div class="form-group col-md-3">
+                    <label for="inputEmail4">Total</label>
+                    <input type="text" class="form-control subtotal" placeholder="Total" readonly value="0.00">
+                  </div>
+                </div>
+              <?php endfor; ?>
+                <button class="float-right d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-plus fa-sm text-white-50"></i> Add More Items</button>
+                <div class="clearfix"></div>
+                <hr>
+                <h3 id="total" class="float-right">Total: PHP 0.00</h3>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="form-group">
+                <label for="comments">Comments</label>
+                <textarea class="form-control" name="comments" id="comments" rows="3"></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container-fluid -->
+  <script>
+
+  $(document).ready(function() {
+    $.fn.inputFilter = function(inputFilter) {
+      return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+        if (inputFilter(this.value)) {
+          this.oldValue = this.value;
+          this.oldSelectionStart = this.selectionStart;
+          this.oldSelectionEnd = this.selectionEnd;
+        } else if (this.hasOwnProperty("oldValue")) {
+          this.value = this.oldValue;
+          this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+        }
+      });
+    };
+
+    function getTotal(){
+      var total = 0;
+      $(".item").each(function(){
+        var quantity = $(this).closest('.form-row').find('.quantity').val();
+        var price = $(this).closest('.form-row').find('.price').val();
+        var subtotal = price * quantity;
+        total += subtotal;
+      });
+
+      $("#total").html("Total: PHP " + parseFloat(Math.round(total * 100) / 100).toFixed(2));
+    }
+
+    // Restrict input to digits by using a regular expression filter.
+    $(".price").inputFilter(function(value) {
+      return /^\d*$/.test(value);
+    });
+
+    $(".quantity").on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+      var price = $(this).closest('.form-row').find('.price').val();
+      var quantity = $(this).val();
+      var total = price * quantity;
+      $(this).closest('.form-row').find('.subtotal').val(parseFloat(Math.round(total * 100) / 100).toFixed(2));
+      getTotal();
+    });
+
+    $(".price").on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
+      var quantity = $(this).closest('.form-row').find('.quantity').val();
+      var price = $(this).val();
+      var total = price * quantity;
+      $(this).closest('.form-row').find('.subtotal').val(parseFloat(Math.round(total * 100) / 100).toFixed(2));
+      getTotal();
+    });
+  });
+  </script>
