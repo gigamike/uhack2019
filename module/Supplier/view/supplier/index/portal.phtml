@@ -1,0 +1,43 @@
+
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <h1 class="h3 mb-0 text-gray-800">Supplier/Vendor Portal</h1>
+    </div>
+    <div class="row">
+      <!-- Sidebar Column -->
+      <div class="col-lg-2 mb-2">
+        <div class="list-group">
+          <?php if(count($this->suppliers) >0): ?>
+              <?php foreach ($this->suppliers as $row): ?>
+          <a target="mapFrame" href="<?php echo $this->escapehtml($row->getUrl()); ?>" class="suppliers list-group-item"><?php echo $this->escapehtml($row->getName()); ?></a>
+        <?php endforeach; ?>
+        <?php endif; ?>
+
+        </div>
+      </div>
+      <!-- Content Column -->
+      <div class="col-lg-10 mb-4">
+        <div class="card shadow mb-4">
+          <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary"></h6>
+          </div>
+          <div class="card-body text-center">
+            <iframe name="mapframe" id="mapframe" src="" style="border:1px solid #aaa;border-radius:10px;width:100%;height:800px;"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container-fluid -->
+  <script>
+  $(document).ready(function() {
+    $(".suppliers").click(function(e) {
+      e.preventDefault();
+      $("#mapframe").attr('src', $(this).attr('href'));
+    })
+  });
+  </script>

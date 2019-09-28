@@ -1,0 +1,38 @@
+<?php echo $this->doctype(); ?>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?php echo $this->headTitle($this->translate('Urban Land Institute Philippines'))->setSeparator(' - ')->setAutoEscape(false) ?>
+        <?php echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+        <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
+                        ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/css/sb-admin-2.css')
+                        ->prependStylesheet('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')
+                        ->prependStylesheet($this->basePath() . '/vendor/fontawesome-free/css/all.min.css') ?>
+          <?php echo $this->headScript()
+              ->prependFile($this->basePath() . '/js/sb-admin-2.min.js')
+              ->prependFile($this->basePath() . '/vendor/jquery-easing/jquery.easing.min.js')
+              ->prependFile($this->basePath() . '/vendor/bootstrap/js/bootstrap.bundle.min.js')
+              ->prependFile($this->basePath() . '/vendor/jquery/jquery.min.js')
+          ; ?>
+    </head>
+    <body class="bg-gradient-primary">
+        <div class="container">
+          <?php echo $this->content; ?>
+        </div>
+        <!-- Footer -->
+        <footer class="py-3">
+          <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; Gigamike.net 2019</p><br>
+            <p class="m-0 text-center text-white">Powered By</p>
+            <div class="text-center"><img src="/img/multichain.png"></div>
+          </div>
+          <!-- /.container -->
+        </footer>
+
+        <?php echo $this->inlineScript() ?>
+    </body>
+</html>
