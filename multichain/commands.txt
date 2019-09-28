@@ -1,0 +1,38 @@
+wget https://www.multichain.com/download/multichain-2.0.3.tar.gz
+tar -xvzf multichain-2.0.3.tar.gz
+cd multichain-2.0.3
+mv multichaind multichain-cli multichain-util /usr/local/bin
+multichain-util create uliph
+vi /root/.multichain/uliph/params.dat
+multichaind uliph -daemon
+
+
+multichaind chain1@207.180.195.194:8571 -daemon
+multichaind uliph -daemon
+
+multichain-cli uliph getinfo
+multichain-cli uliph getaddresses
+multichain-cli uliph listaddresses
+multichain-cli uliph getnewaddress
+
+multichain-cli uliph listpermissions issue
+1ABS4s1TzPn8fR7WG6tZWu4TSPAMeBUeuVML8Q
+
+multichain-cli uliph issue 1ABS4s1TzPn8fR7WG6tZWu4TSPAMeBUeuVML8Q asset1 100000000 0.01
+
+https://github.com/MultiChain/multichain-web-demo
+
+multichaind uliph@207.180.195.194:1234
+
+vi /root/.multichain/chain1/multichain.conf
+multichain-cli chain1 listpermissions issue
+
+multichaind chain1@207.180.195.194:8371
+http://207.180.195.194:8371
+
+multichaind chaintest1@207.180.195.194:8371
+multichain-cli chaintest getinfo
+multichaind chaintest1@207.180.195.194:8371 -debug=mchn -debug=mchnminor -debug=net
+
+netstat -tulpn | grep LISTEN
+multichain-cli chaintest issue 1ABS4s1TzPn8fR7WG6tZWu4TSPAMeBUeuVML8Q asset1 100000000 0.01

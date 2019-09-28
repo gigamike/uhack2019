@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Sep 27, 2019 at 10:55 PM
+-- Generation Time: Sep 29, 2019 at 05:52 AM
 -- Server version: 5.7.26
 -- PHP Version: 7.1.31
 
@@ -29,6 +29,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `purchase_order` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `status` enum('pending','approved') NOT NULL,
+  `timeline_datetime` date NOT NULL,
   `comments` text,
   `created_datetime` datetime NOT NULL,
   `created_user_id` bigint(10) UNSIGNED NOT NULL
@@ -38,22 +39,12 @@ CREATE TABLE `purchase_order` (
 -- Dumping data for table `purchase_order`
 --
 
-INSERT INTO `purchase_order` (`id`, `status`, `comments`, `created_datetime`, `created_user_id`) VALUES
-(1, 'pending', NULL, '2019-09-24 00:00:00', 1001),
-(4, 'pending', 'This is a test', '2019-09-24 11:51:06', 1001),
-(5, 'pending', '', '2019-09-24 11:53:45', 1001),
-(16, 'pending', NULL, '2019-09-24 13:01:41', 1001),
-(17, 'pending', NULL, '2019-09-24 13:03:11', 1001),
-(18, 'pending', NULL, '2019-09-24 13:03:59', 1001),
-(19, 'pending', '', '2019-09-25 09:32:17', 1001),
-(20, 'pending', NULL, '2019-09-25 11:32:43', 1001),
-(21, 'pending', NULL, '2019-09-25 11:34:42', 1001),
-(22, 'pending', '', '2019-09-27 09:40:19', 1001),
-(23, 'pending', NULL, '2019-09-27 09:41:54', 1001),
-(24, 'pending', '', '2019-09-27 09:44:58', 1001),
-(25, 'pending', NULL, '2019-09-27 09:45:50', 1001),
-(26, 'pending', '', '2019-09-27 09:49:42', 1001),
-(27, 'pending', NULL, '2019-09-27 09:50:18', 1001);
+INSERT INTO `purchase_order` (`id`, `status`, `timeline_datetime`, `comments`, `created_datetime`, `created_user_id`) VALUES
+(1, 'pending', '2019-09-10', '', '2019-09-28 20:27:18', 1001),
+(2, 'pending', '2019-09-10', '', '2019-09-28 20:29:56', 1001),
+(3, 'pending', '2019-09-10', '', '2019-09-28 20:46:01', 1001),
+(4, 'pending', '2019-10-10', NULL, '2019-09-28 20:46:35', 1001),
+(5, 'pending', '2019-10-10', NULL, '2019-09-28 20:57:00', 1001);
 
 -- --------------------------------------------------------
 
@@ -75,31 +66,13 @@ CREATE TABLE `purchase_order_item` (
 --
 
 INSERT INTO `purchase_order_item` (`id`, `purchase_order_id`, `item`, `quantity`, `unit_price`, `created_datetime`) VALUES
-(1, 1, 'welding rod', 1, '90.00', '2019-09-24 00:00:00'),
-(2, 4, 'light bulbs', 20, '150.00', '2019-09-24 11:51:06'),
-(3, 4, 'light switch', 20, '50.00', '2019-09-24 11:51:06'),
-(4, 5, 'light bulbs', 1, '1.00', '2019-09-24 11:53:45'),
-(5, 5, 'light switch', 1, '1.00', '2019-09-24 11:53:45'),
-(6, 16, 'bulb', 1, '50.00', '2019-09-24 13:01:41'),
-(7, 17, 'bulb', 1, '50.00', '2019-09-24 13:03:11'),
-(8, 18, 'bulb', 1, '4.00', '2019-09-24 13:03:59'),
-(9, 19, 'bulb', 1, '200.00', '2019-09-25 09:32:18'),
-(10, 19, 'switch', 1, '100.00', '2019-09-25 09:32:18'),
-(11, 20, 'bulb', 10, '100.00', '2019-09-25 11:32:43'),
-(12, 21, 'bulb', 10, '100.00', '2019-09-25 11:34:42'),
-(13, 21, 'switch', 10, '50.00', '2019-09-25 11:34:42'),
-(14, 22, 'bulb', 10, '100.00', '2019-09-27 09:40:19'),
-(15, 22, 'switch', 10, '50.00', '2019-09-27 09:40:19'),
-(16, 23, 'bulb', 10, '100.00', '2019-09-27 09:41:54'),
-(17, 23, 'switch', 10, '50.00', '2019-09-27 09:41:54'),
-(18, 24, 'bulb', 10, '100.00', '2019-09-27 09:44:58'),
-(19, 24, 'switch', 10, '50.00', '2019-09-27 09:44:58'),
-(20, 25, 'bulb', 10, '100.00', '2019-09-27 09:45:51'),
-(21, 25, 'switch', 1, '50.00', '2019-09-27 09:45:51'),
-(22, 26, 'bulb', 10, '100.00', '2019-09-27 09:49:42'),
-(23, 26, 'switch', 10, '50.00', '2019-09-27 09:49:42'),
-(24, 27, 'light', 10, '100.00', '2019-09-27 09:50:18'),
-(25, 27, 'switch', 1, '100.00', '2019-09-27 09:50:18');
+(1, 1, 'bulb', 10, '100.00', '2019-09-28 20:27:18'),
+(2, 2, 'bulb', 10, '100.00', '2019-09-28 20:29:56'),
+(3, 3, 'bulb', 10, '100.00', '2019-09-28 20:46:01'),
+(4, 4, 'bulb', 5, '100.00', '2019-09-28 20:46:35'),
+(5, 4, 'switch', 5, '50.00', '2019-09-28 20:46:35'),
+(6, 5, 'bulb', 5, '100.00', '2019-09-28 20:57:00'),
+(7, 5, 'switch', 5, '90.00', '2019-09-28 20:57:00');
 
 -- --------------------------------------------------------
 
@@ -122,19 +95,17 @@ CREATE TABLE `purchase_order_item_bid` (
 --
 
 INSERT INTO `purchase_order_item_bid` (`id`, `purchase_order_id`, `supplier_id`, `item`, `quantity`, `unit_price`, `created_datetime`) VALUES
-(1, 19, 1005, 'bulb', 1, '190.00', '2019-09-25 10:28:09'),
-(2, 19, 1005, 'switch', 1, '90.00', '2019-09-25 10:28:09'),
-(3, 18, 1005, 'bulb', 1, '2.00', '2019-09-25 10:40:21'),
-(4, 19, 1006, 'bulb', 1, '210.00', '2019-09-25 10:49:21'),
-(5, 19, 1006, 'switch', 1, '110.00', '2019-09-25 10:49:21'),
-(6, 19, 1007, 'bulb', 1, '210.00', '2019-09-26 11:43:50'),
-(7, 19, 1007, 'switch', 1, '110.00', '2019-09-26 11:43:50'),
-(8, 27, 1005, 'light', 10, '90.00', '2019-09-27 11:10:14'),
-(9, 27, 1005, 'switch', 1, '90.00', '2019-09-27 11:10:14'),
-(10, 27, 1006, 'light', 10, '110.00', '2019-09-27 11:11:20'),
-(11, 27, 1006, 'switch', 1, '90.00', '2019-09-27 11:11:20'),
-(12, 27, 1007, 'light', 10, '150.00', '2019-09-27 11:11:42'),
-(13, 27, 1007, 'switch', 1, '110.00', '2019-09-27 11:11:42');
+(1, 4, 1005, 'bulb', 5, '100.00', '2019-09-28 20:49:30'),
+(2, 4, 1005, 'switch', 5, '50.00', '2019-09-28 20:49:30'),
+(3, 4, 1006, 'bulb', 5, '110.00', '2019-09-28 20:49:45'),
+(4, 4, 1006, 'switch', 5, '60.00', '2019-09-28 20:49:45'),
+(5, 3, 1006, 'bulb', 10, '10.00', '2019-09-28 20:49:57'),
+(6, 5, 1005, 'bulb', 5, '110.00', '2019-09-28 21:18:48'),
+(7, 5, 1005, 'switch', 5, '90.00', '2019-09-28 21:18:48'),
+(8, 5, 1006, 'bulb', 5, '100.00', '2019-09-28 21:19:05'),
+(9, 5, 1006, 'switch', 5, '120.00', '2019-09-28 21:19:05'),
+(10, 5, 1007, 'bulb', 5, '100.00', '2019-09-28 21:19:30'),
+(11, 5, 1007, 'switch', 5, '85.00', '2019-09-28 21:19:30');
 
 -- --------------------------------------------------------
 
@@ -237,7 +208,8 @@ ALTER TABLE `purchase_order`
   ADD PRIMARY KEY (`id`),
   ADD KEY `created_datetime` (`created_datetime`),
   ADD KEY `created_user_id` (`created_user_id`),
-  ADD KEY `status` (`status`);
+  ADD KEY `status` (`status`),
+  ADD KEY `timeline_datetime` (`timeline_datetime`);
 
 --
 -- Indexes for table `purchase_order_item`
@@ -286,19 +258,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `purchase_order`
 --
 ALTER TABLE `purchase_order`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `purchase_order_item`
 --
 ALTER TABLE `purchase_order_item`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `purchase_order_item_bid`
 --
 ALTER TABLE `purchase_order_item_bid`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `settings`
