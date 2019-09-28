@@ -46,6 +46,12 @@ echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-succes
                 <input type="text" readonly class="form-control-plaintext" value="<?php echo date('M d, Y H:i:s', strtotime($this->createdBy->getCreatedDatetime())); ?>">
               </div>
             </div>
+            <div class="form-group row">
+              <label for="staticEmail" class="col-sm-4 col-form-label">Timeline/Date Needed</label>
+              <div class="col-sm-8">
+                <input type="text" readonly class="form-control-plaintext" value="<?php echo date('M d, Y', strtotime($this->purchaseOrder->getTimelineDatetime())); ?>">
+              </div>
+            </div>
 
             <table class="table table-striped table-bordered table-hover table-sm">
               <thead>
@@ -90,7 +96,7 @@ echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-succes
               <thead>
                 <tr>
                   <th>Company Name</th>
-                  <th>Quotation</th>
+                  <th>Quotation (PHP)</th>
                   <th>Details</th>
                   <th>Requestor</th>
                   <th>Operation Dept.</th>
@@ -99,15 +105,16 @@ echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-succes
               </thead>
               <tbody>
                 <?php
+                $amountSelected = 0;
                   $ctr = 0;
                   foreach ($this->purchaseOrderItemBids as $row):
                     $ctr++;
                 ?>
                 <tr>
                   <td><a href="#"><?php echo $this->escapehtml($row->company_name); ?></a></td>
-                  <td>PHP <?php echo number_format($row->amount, 2, '.', ' '); ?></td>
+                  <td>PHP <?php echo number_format($row->amount, 2, '.', ','); ?></td>
                   <td><a href="#">Details</a></td>
-                  <td class="text-center"><?php if($ctr==1): ?><i class="fas fa-thumbs-up"></i><?php else: ?><i class="fas fa-minus-circle"></i><?php endif; ?></td>
+                  <td class="text-center"><?php if($ctr==1): $amountSelected = number_format($row->amount, 2, '.', ','); ?><i class="fas fa-thumbs-up"></i><?php else: ?><i class="fas fa-minus-circle"></i><?php endif; ?></td>
                   <td class="text-center"><?php if($ctr==1): ?><i class="fas fa-thumbs-up"></i><?php else: ?><i class="fas fa-minus-circle"></i><?php endif; ?></td>
                   <td class="text-center"><button type="button" class="myButton" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-thumbs-up" style="color:green"></i></button> | <button data-toggle="modal" data-target="#exampleModal" type="button" class="myButton"><i class="fas fa-thumbs-down" style="color:red"></i></button> </td>
                 </tr>
@@ -131,7 +138,7 @@ echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-succes
                 <p><strong>User: </strong><?php echo $this->escapehtml($this->user->getFirstName()); ?> <?php echo $this->escapehtml($this->user->getLastName()); ?></p>
                 <p><strong>My Public Address: </strong><?php echo $this->escapehtml($this->user->getPublicAddress()); ?></p>
                 <p><strong>Funds: PHP 100,000.00</strong></p>
-                <p><strong>Blockchain Explorers: </strong> <a href="https://eosauthority.com/" target="_blank">Open</a></p>
+                <p><strong>Blockchain Explorers: </strong> <a href="http://207.180.195.194:8371/MultiChain%20chain1/blocks" target="_blank">Open</a></p>
               </div>
           </div>
         </div>
@@ -143,35 +150,37 @@ echo $flash->render('success', array('alert', 'alert-dismissible', 'alert-succes
   <!-- /.container-fluid -->
 
   <!-- Modal -->
+  <form method="post">
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Approved Bid</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Approved Bid?</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <p><strong>PO#19</strong> Bid/Quotation Approved for Supplier/Vendor Electro Works.</p>
+        <p><strong>PO#<?php echo $this->escapehtml($this->purchaseOrder->getId()); ?></strong> Bid/Quotation</p>
         <p><strong>Electro Works Public Address:</strong> 1ABS4s1TzPn8fR7WG6tZWu4TSPAMeBUeuVML8Q</p>
-        <img src="<?php echo $this->getQRCode($this->escapehtml($this->user->getPublicAddress()), 200, 200); ?>">
+        <p><strong>Amount:</strong> PHP<?php echo $amountSelected; ?></p>
+        <div class="form-group row">
+          <label for="inputPassword" class="col-sm-4 col-form-label"><strong>Payment Date</strong></label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" name="timeline_datetime" placeholder="YYYY-MM-DD" value="" id="date">
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" data-dismiss="modal">Approved Bid</button>
+        <button type="submit" class="btn btn-primary">Approved Invoice</button>
       </div>
     </div>
   </div>
 </div>
-
+</form>
   <script>
-  $(document).ready(function(){
-    $(".myButton").click(function() {
-      return signin();
-    });
-    $(".myForm").submit(function() {
-      return signin();
-    });
+  $(document).ready(function() {
+    $("#date").datepicker({dateFormat:"yy-mm-dd"});
   });
   </script>

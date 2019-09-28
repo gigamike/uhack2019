@@ -289,6 +289,12 @@ class IndexController extends AbstractActionController
       return $this->redirect()->toRoute('purchase-order');
     }
 
+    $request = $this->getRequest();
+    if ($request->isPost()) {
+      $this->flashMessenger()->setNamespace('success')->addMessage('Payment successfull.');
+      return $this->redirect()->toRoute('purchase-order', ['action' => 'bid', 'id' => $id]);
+    }
+
     return new ViewModel([
       'purchaseOrder' => $purchaseOrder,
       'createdBy' => $createdBy,
