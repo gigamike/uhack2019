@@ -70,6 +70,7 @@ class IndexController extends AbstractActionController
 
     $botman->hears('create purchase order', function (BotMan $bot) {
       $_SESSION['PO']['items'] = array();
+      $_SESSION['PO']['timeline'] = null;
       $reply = " Enter item by saying <strong>item name,quantity,unit price</strong>. Example item bulb,1,50";
       $bot->reply($reply);
     });
@@ -99,35 +100,38 @@ class IndexController extends AbstractActionController
         );
 
         $reply = "Item added!";
-        $reply .= " Do you want to add more? Enter item by saying <strong>item name, quantity, unit price</strong>. Example item bulb,1,50. If not say <strong>order confirmed</strong>";
+        $reply .= " Do you want to add more? Enter item by saying <strong>item name, quantity, unit price</strong>. Example item bulb,1,50. If not say <strong>timeline YYYY-MM-DD</strong>";
       }
 
       $bot->reply($reply);
     });
 
-    $botman->hears('order confirmed', function (BotMan $bot) {
-      $reply = "Invalid order";
+    $botman->hears('timeline {date}', function (BotMan $bot, $date) {
+      list($year, $month, $day)  = explode('-', $date);
+      if(!checkdate($month, $day, $year)){
+        $reply = "Invalid timeline";
+      }else{
+        if(count($_SESSION['PO']['items']) > 0 && !empty($date)){
+          $authService = $this->serviceLocator->get('auth_service');
 
-      if(count($_SESSION['PO']['items']) > 0){
-        $authService = $this->serviceLocator->get('auth_service');
+          $purchaseOrder = new PurchaseOrderEntity();
+          $purchaseOrder->setStatus('pending');
+          $purchaseOrder->setTimelineDatetime($date);
+          $purchaseOrder->setComments(null);
+          $purchaseOrder->setCreatedUserId($authService->getIdentity()->id);
+          $this->getPurchaseOrderMapper()->save($purchaseOrder);
 
-        $purchaseOrder = new PurchaseOrderEntity();
-        $purchaseOrder->setStatus('pending');
-        $purchaseOrder->setComments(null);
-        $purchaseOrder->setCreatedUserId($authService->getIdentity()->id);
-        $this->getPurchaseOrderMapper()->save($purchaseOrder);
+          foreach ($_SESSION['PO']['items'] as $row) {
+            $purchaseOrderItem = new PurchaseOrderItemEntity();
+            $purchaseOrderItem->setPurchaseOrderId($purchaseOrder->getId());
+            $purchaseOrderItem->setItem($row['item']);
+            $purchaseOrderItem->setQuantity($row['quantity']);
+            $purchaseOrderItem->setUnitPrice($row['price']);
+            $this->getPurchaseOrderItemMapper()->save($purchaseOrderItem);
 
-        foreach ($_SESSION['PO']['items'] as $row) {
-          $purchaseOrderItem = new PurchaseOrderItemEntity();
-          $purchaseOrderItem->setPurchaseOrderId($purchaseOrder->getId());
-          $purchaseOrderItem->setItem($row['item']);
-          $purchaseOrderItem->setQuantity($row['quantity']);
-          $purchaseOrderItem->setUnitPrice($row['price']);
-          $this->getPurchaseOrderItemMapper()->save($purchaseOrderItem);
-
-          $reply = "Purchase order successfully created!" . " <strong>PO# " . $purchaseOrder->getId() . "</strong>";
+            $reply = "Purchase order successfully created!" . " <strong>PO# " . $purchaseOrder->getId() . "</strong>";
+          }
         }
-
       }
 
       $bot->reply($reply);
