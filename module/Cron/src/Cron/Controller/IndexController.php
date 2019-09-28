@@ -20,37 +20,6 @@ class IndexController extends AbstractActionController
   */
   public function indexAction()
   {
-    $subject = "New Purchase Order From ULI PH";
-    $message = "New Purchase Order From ULI PH. Purchase Order No. 1 Pls. visit <a href=\"http://uhack2017.gigamike.net/\">http://uhack2017.gigamike.net/</a>";
-
-    $text = new MimePart($message);
-    $text->type = "text/plain";
-
-    $html = new MimePart($message);
-    $html->type = "text/html";
-
-    $body = new MimeMessage();
-    $body->setParts(array($text, $html));
-
-    $mail = new  Message();
-    $mail->setFrom('engineer@gigamike.net');
-    $mail->addTo('supplier@gigamike.net');
-    $mail->setEncoding("UTF-8");
-    $mail->setSubject($subject);
-    $mail->setBody($body);
-
-    $transport = new SmtpTransport();
-    $options   = new SmtpOptions(array(
-      'host'              => 'email-smtp.us-east-1.amazonaws.com',
-      'port'              => 587,
-      'connection_class'  => 'login',
-      'connection_config' => array(
-        'username' => 'AKIA3GABCPBOQJUCCXOY',
-        'password' => 'BAmT8/z5OdlNXmefovH4t1sVXFefWCYcpPPf5KixYx3k',
-        'ssl'      => 'tls',
-      ),
-    ));
-    $transport->setOptions($options);
-    $transport->send($mail);
+  
 	}
 }

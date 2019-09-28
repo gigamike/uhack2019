@@ -9,6 +9,7 @@
         ?>
         <?php echo $this->headLink(array('rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'))
                         ->prependStylesheet($this->basePath() . '/css/style.css')
+                        ->prependStylesheet($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.css')
                         ->prependStylesheet($this->basePath() . '/vendor/datatables/dataTables.bootstrap4.min.css')
                         ->prependStylesheet($this->basePath() . '/css/sb-admin-2.min.css')
                         ->prependStylesheet('https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i')
@@ -18,6 +19,7 @@
               // ->prependFile($this->basePath() . '/js/demo/chart-area-demo.js')
               // ->prependFile($this->basePath() . '/vendor/chart.js/Chart.min.js')
               ->prependFile($this->basePath() . '/js/demo/datatables-demo.js')
+              ->prependFile($this->basePath() . '/vendor/jquery-ui-1.12.1/jquery-ui.min.js')
               ->prependFile($this->basePath() . '/vendor/datatables/jquery.dataTables.min.js')
               ->prependFile($this->basePath() . '/vendor/datatables/dataTables.bootstrap4.min.js')
               // ->prependFile($this->basePath() . '/js/sb-admin-2.min.js')
@@ -35,7 +37,7 @@
           <!-- Sidebar - Brand -->
           <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo $this->url('home'); ?>">
             <img class="sidebar-logo" src="/img/uli-logo.png">
-            <div class="sidebar-brand-text mx-3">ULI PH <sup>e-Procurement</sup></div>
+            <div class="sidebar-brand-text mx-3">ULI PH <sup>e-ProcureChain</sup></div>
           </a>
 
           <!-- Divider -->

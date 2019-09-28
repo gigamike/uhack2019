@@ -17,7 +17,7 @@ class AuthController extends AbstractActionController
     {
       $authService = $this->serviceLocator->get('auth_service');
   		if (! $authService->hasIdentity()) {
-  			return $this->redirect()->toUrl('/home');
+  			return $this->redirect()->toRoute('home');
   		}
 
       $authService->clearIdentity();

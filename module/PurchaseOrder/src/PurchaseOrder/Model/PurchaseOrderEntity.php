@@ -5,6 +5,7 @@ class PurchaseOrderEntity
 {
 	protected $id;
 	protected $status;
+	protected $timeline_datetime;
 	protected $comments;
 	protected $created_datetime;
 	protected $created_user_id;
@@ -32,6 +33,16 @@ class PurchaseOrderEntity
 	public function setStatus($value)
 	{
 		$this->status = $value;
+	}
+
+	public function getTimelineDatetime()
+	{
+		return $this->timeline_datetime;
+	}
+
+	public function setTimelineDatetime($value)
+	{
+		$this->timeline_datetime = $value;
 	}
 
 	public function getComments()

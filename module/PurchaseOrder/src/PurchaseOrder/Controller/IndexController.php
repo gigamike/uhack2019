@@ -98,6 +98,7 @@ class IndexController extends AbstractActionController
       $items = $request->getPost('items');
       $quanitities = $request->getPost('quanitities');
       $prices = $request->getPost('prices');
+      $timeline_datetime = $request->getPost('timeline_datetime');
       $comments = $request->getPost('comments');
 
       $validItems = array();
@@ -120,6 +121,7 @@ class IndexController extends AbstractActionController
 
         $purchaseOrder = new PurchaseOrderEntity();
         $purchaseOrder->setStatus('pending');
+        $purchaseOrder->setTimelineDatetime($timeline_datetime);
         $purchaseOrder->setComments($comments);
         $purchaseOrder->setCreatedUserId($authService->getIdentity()->id);
         $this->getPurchaseOrderMapper()->save($purchaseOrder);
@@ -132,39 +134,6 @@ class IndexController extends AbstractActionController
           $purchaseOrderItem->setUnitPrice($row['price']);
           $this->getPurchaseOrderItemMapper()->save($purchaseOrderItem);
         }
-
-        $subject = "New Purchase Order From ULI PH. PO#" . $purchaseOrder->getId();
-        $message = "New Purchase Order From ULI PH. PO# " . $purchaseOrder->getId() . " Pls. visit <a href=\"https://uhack2017.gigamike.net/\">http://uhack2017.gigamike.net/</a>";
-
-        $text = new MimePart($message);
-        $text->type = "text/plain";
-
-        $html = new MimePart($message);
-        $html->type = "text/html";
-
-        $body = new MimeMessage();
-        $body->setParts(array($text, $html));
-
-        $mail = new  Message();
-        $mail->setFrom('engineer@gigamike.net');
-        $mail->addTo('supplier@gigamike.net');
-        $mail->setEncoding("UTF-8");
-        $mail->setSubject($subject);
-        $mail->setBody($body);
-
-        $transport = new SmtpTransport();
-        $options   = new SmtpOptions(array(
-          'host'              => 'email-smtp.us-east-1.amazonaws.com',
-          'port'              => 587,
-          'connection_class'  => 'login',
-          'connection_config' => array(
-            'username' => 'AKIA3GABCPBOQJUCCXOY',
-            'password' => 'BAmT8/z5OdlNXmefovH4t1sVXFefWCYcpPPf5KixYx3k',
-            'ssl'      => 'tls',
-          ),
-        ));
-        $transport->setOptions($options);
-        $transport->send($mail);
 
         $this->flashMessenger()->setNamespace('success')->addMessage('Purchase Order successfully.');
         return $this->redirect()->toRoute('purchase-order');

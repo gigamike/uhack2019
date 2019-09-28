@@ -62,10 +62,17 @@
                 <div class="clearfix"></div>
               </div>
 
-              <div class="form-group">
-                <label for="comments">Comments</label>
-                <textarea class="form-control" name="comments" id="comments" rows="3"></textarea>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="comments">Timeline/Date Needed</label>
+                  <input type="text" class="form-control" name="timeline_datetime" placeholder="YYYY-MM-DD" value="" id="date">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="comments">Comments</label>
+                  <textarea class="form-control" name="comments" id="comments" rows="3"></textarea>
+                </div>
               </div>
+
               <button type="submit" class="btn btn-primary">Submit</button>
             </form>
           </div>
@@ -79,6 +86,8 @@
   <script>
 
   $(document).ready(function() {
+    $("#date").datepicker({dateFormat:"yy-mm-dd"});
+
     $.fn.inputFilter = function(inputFilter) {
       return this.on("input keydown keyup mousedown mouseup select contextmenu drop", function() {
         if (inputFilter(this.value)) {
